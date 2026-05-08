@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Edit, Trash2, Library, Calendar, User, Tag } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api/books';
+const API_URL = import.meta.env.VITE_API_URL;
 
 function BookList() {
   const [books, setBooks] = useState([]);
@@ -60,8 +60,8 @@ function BookList() {
     <div className="book-grid">
       {books.map((book) => (
         <div key={book.id} className="book-card">
-          {book.cover_url ? (
-            <img src={book.cover_url} alt={`Portada de ${book.title}`} className="book-cover" />
+          {book.url_portada ? (
+            <img src={book.url_portada} alt={`Portada de ${book.titulo}`} className="book-cover" />
           ) : (
             <div className="book-cover-placeholder">
               <Library size={48} />
@@ -69,21 +69,21 @@ function BookList() {
           )}
           
           <div className="book-info">
-            <h3 className="book-title">{book.title}</h3>
+            <h3 className="book-title">{book.titulo}</h3>
             
             <div className="book-author">
               <User size={16} />
-              {book.author}
+              {book.autor}
             </div>
             
             <div className="book-meta">
               <span className="badge">
                 <Tag size={12} />
-                {book.genre}
+                {book.genero}
               </span>
               <span className="badge">
                 <Calendar size={12} />
-                {book.publication_year}
+                {book.anio_publicacion}
               </span>
             </div>
             

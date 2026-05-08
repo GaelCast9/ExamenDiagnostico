@@ -41,22 +41,51 @@ git clone https://github.com/GaelCast9/ExamenDiagnostico.git
 cd ExamenDiagnostico
 ```
 
-### 2. Configurar la Base de Datos
-Asegúrate de que MySQL esté corriendo (usuario `root`, contraseña `root`).
-Ve a la carpeta del backend y ejecuta el script de inicialización:
+### 2. Configurar la Base de Datos y Variables de Entorno
+
+Asegúrate de que MySQL esté corriendo.
+**Importante:** Debes crear la base de datos manualmente en MySQL antes de iniciar el servidor. Por ejemplo:
+```sql
+CREATE DATABASE books_db;
+```
+*(Nota: Sequelize se encargará de crear la tabla `libros` automáticamente cuando inicies el servidor por primera vez).*
+
+Luego, configura las variables de entorno para el backend y frontend:
+
+**Backend:**
+Navega a la carpeta `backend`, copia el archivo `.env.example` y renómbralo a `.env`:
 ```bash
 cd backend
 npm install
-node init_db.js
+cp .env.example .env
 ```
-*Esto creará la base de datos `books_db`, la tabla `books` y agregará algunos libros de prueba.*
+Edita el archivo `.env` con tus credenciales de MySQL:
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=root
+DB_NAME=books_db
+PORT=5000
+```
+
+**Frontend:**
+Abre una nueva terminal, ve a la carpeta `frontend`, instala dependencias y crea su archivo `.env` basado en el `.env.example`:
+```bash
+cd frontend
+npm install
+cp .env.example .env
+```
+Asegúrate de que el archivo `frontend/.env` tenga la URL correcta de tu API:
+```env
+VITE_API_URL=http://localhost:5000/api/books
+```
 
 ### 3. Iniciar el Servidor Backend
+Vuelve a la terminal del backend y ejecuta:
 ```bash
 npm start 
-# o alternativamente: node server.js
 ```
-El servidor se ejecutará en `http://localhost:5000`.
+El servidor se ejecutará en `http://localhost:5000` y sincronizará las tablas con la base de datos.
 
 ### 4. Iniciar el Servidor Frontend
 Abre una nueva terminal, ve a la carpeta del frontend y ejecuta:

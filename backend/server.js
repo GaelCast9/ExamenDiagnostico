@@ -11,7 +11,12 @@ const bookRoutes = require('./routes/bookRoutes');
 app.use('/api/books', bookRoutes);
 
 const PORT = process.env.PORT || 5000;
+const sequelize = require('./config/db');
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+  });
+}).catch(err => {
+  console.error('No se pudo conectar a la base de datos:', err);
 });

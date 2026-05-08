@@ -3,15 +3,15 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Save, ArrowLeft } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api/books';
+const API_URL = import.meta.env.VITE_API_URL;
 
 function BookForm() {
   const [formData, setFormData] = useState({
-    title: '',
-    author: '',
-    genre: '',
-    publication_year: '',
-    cover_url: ''
+    titulo: '',
+    autor: '',
+    genero: '',
+    anio_publicacion: '',
+    url_portada: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -86,13 +86,13 @@ function BookForm() {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="title">Título del libro *</label>
+          <label htmlFor="titulo">Título del libro *</label>
           <input
             type="text"
-            id="title"
-            name="title"
+            id="titulo"
+            name="titulo"
             className="form-control"
-            value={formData.title}
+            value={formData.titulo || ''}
             onChange={handleChange}
             required
             placeholder="Ej. Cien años de soledad"
@@ -100,13 +100,13 @@ function BookForm() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="author">Autor *</label>
+          <label htmlFor="autor">Autor *</label>
           <input
             type="text"
-            id="author"
-            name="author"
+            id="autor"
+            name="autor"
             className="form-control"
-            value={formData.author}
+            value={formData.autor || ''}
             onChange={handleChange}
             required
             placeholder="Ej. Gabriel García Márquez"
@@ -114,13 +114,13 @@ function BookForm() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="genre">Género literario *</label>
+          <label htmlFor="genero">Género literario *</label>
           <input
             type="text"
-            id="genre"
-            name="genre"
+            id="genero"
+            name="genero"
             className="form-control"
-            value={formData.genre}
+            value={formData.genero || ''}
             onChange={handleChange}
             required
             placeholder="Ej. Realismo mágico"
@@ -128,13 +128,13 @@ function BookForm() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="publication_year">Año de publicación *</label>
+          <label htmlFor="anio_publicacion">Año de publicación *</label>
           <input
             type="number"
-            id="publication_year"
-            name="publication_year"
+            id="anio_publicacion"
+            name="anio_publicacion"
             className="form-control"
-            value={formData.publication_year}
+            value={formData.anio_publicacion || ''}
             onChange={handleChange}
             required
             min="1000"
@@ -144,19 +144,19 @@ function BookForm() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="cover_url">URL de la Portada (Opcional)</label>
+          <label htmlFor="url_portada">URL de la Portada (Opcional)</label>
           <input
             type="url"
-            id="cover_url"
-            name="cover_url"
+            id="url_portada"
+            name="url_portada"
             className="form-control"
-            value={formData.cover_url}
+            value={formData.url_portada || ''}
             onChange={handleChange}
             placeholder="https://ejemplo.com/imagen.jpg"
           />
-          {formData.cover_url && (
+          {formData.url_portada && (
             <div style={{ marginTop: '1rem', borderRadius: '0.5rem', overflow: 'hidden', width: '100px', height: '150px' }}>
-              <img src={formData.cover_url} alt="Vista previa" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={formData.url_portada} alt="Vista previa" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           )}
         </div>

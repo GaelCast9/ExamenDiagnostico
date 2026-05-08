@@ -1,9 +1,11 @@
-const pool = require('../config/db');
+const Libro = require('../models/Libro');
 
 exports.getAllBooks = async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM books ORDER BY id DESC');
-    res.json(rows);
+    const books = await Libro.findAll({
+      order: [['id', 'DESC']]
+    });
+    res.json(books);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener los libros', error: error.message });
   }
@@ -12,9 +14,9 @@ exports.getAllBooks = async (req, res) => {
 exports.getBookById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.query('SELECT * FROM books WHERE id = ?', [id]);
-    if (rows.length === 0) return res.status(404).json({ message: 'Libro no encontrado' });
-    res.json(rows[0]);
+    const book = await Libro.findByPk(id);
+    if (!book) return res.status(404).json({ message: 'Libro no encontrado' });
+    res.json(book);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener el libro', error: error.message });
   }
@@ -22,17 +24,21 @@ exports.getBookById = async (req, res) => {
 
 exports.createBook = async (req, res) => {
   try {
-    const { title, author, genre, publication_year, cover_url } = req.body;
+    const { titulo, autor, genero, anio_publicacion, url_portada } = req.body;
     
-    // Validate required fields (at least 4 fields required by the user)
-    if (!title || !author || !genre || !publication_year) {
+    if (!titulo || !autor || !genero || !anio_publicacion) {
       return res.status(400).json({ message: 'Todos los campos son obligatorios (excepto portada).' });
     }
 
-    const query = 'INSERT INTO books (title, author, genre, publication_year, cover_url) VALUES (?, ?, ?, ?, ?)';
-    const [result] = await pool.query(query, [title, author, genre, publication_year, cover_url || null]);
+    const newBook = await Libro.create({
+      titulo,
+      autor,
+      genero,
+      anio_publicacion,
+      url_portada: url_portada || null
+    });
     
-    res.status(201).json({ id: result.insertId, title, author, genre, publication_year, cover_url });
+    res.status(201).json(newBook);
   } catch (error) {
     res.status(500).json({ message: 'Error al crear el libro', error: error.message });
   }
@@ -41,12 +47,14 @@ exports.createBook = async (req, res) => {
 exports.updateBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, author, genre, publication_year, cover_url } = req.body;
+    const { titulo, autor, genero, anio_publicacion, url_portada } = req.body;
     
-    const query = 'UPDATE books SET title = ?, author = ?, genre = ?, publication_year = ?, cover_url = ? WHERE id = ?';
-    const [result] = await pool.query(query, [title, author, genre, publication_year, cover_url || null, id]);
+    const [updatedRows] = await Libro.update(
+      { titulo, autor, genero, anio_publicacion, url_portada: url_portada || null },
+      { where: { id } }
+    );
     
-    if (result.affectedRows === 0) return res.status(404).json({ message: 'Libro no encontrado' });
+    if (updatedRows === 0) return res.status(404).json({ message: 'Libro no encontrado' });
     res.json({ message: 'Libro actualizado correctamente' });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar el libro', error: error.message });
@@ -56,9 +64,11 @@ exports.updateBook = async (req, res) => {
 exports.deleteBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const [result] = await pool.query('DELETE FROM books WHERE id = ?', [id]);
+    const deletedRows = await Libro.destroy({
+      where: { id }
+    });
     
-    if (result.affectedRows === 0) return res.status(404).json({ message: 'Libro no encontrado' });
+    if (deletedRows === 0) return res.status(404).json({ message: 'Libro no encontrado' });
     res.json({ message: 'Libro eliminado correctamente' });
   } catch (error) {
     res.status(500).json({ message: 'Error al eliminar el libro', error: error.message });

@@ -104,5 +104,3 @@ La aplicación web estará disponible en la URL proporcionada por Vite (generalm
 - Implementar la conexión a la base de datos MySQL y la escritura de las consultas SQL y lógica del controlador de manera segura y estandarizada.
 - Redactar este archivo `README.md` siguiendo las mejores prácticas de documentación.
 
-## Evidencias (Capturas de Pantalla)
-*(Las capturas del sistema funcionando se adjuntarán por separado o se agregarán al repositorio antes de la entrega final).*
